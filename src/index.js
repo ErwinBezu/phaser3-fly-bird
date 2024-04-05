@@ -23,9 +23,4 @@ const config = {
   scene: [new PlayScene(SHARED_CONFIG)],
 };
 
-const VELOCITY = 200;
-
-let bird = null;
-let pipes = null;
-
 new Phaser.Game(config);
