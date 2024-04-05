@@ -12,7 +12,7 @@ class PlayScene extends Phaser.Scene {
     this.pipeHorizontalDistance = 0;
     this.pipeVerticalDistanceRange = [150, 250];
     this.pipeHorizontalDistanceRange = [500, 550];
-    this.flapVelocity = 250;
+    this.flapVelocity = 300;
   }
 
   preload() {
@@ -42,7 +42,8 @@ class PlayScene extends Phaser.Scene {
     this.bird = this.physics.add
       .sprite(this.config.startPosition.x, this.config.startPosition.y, "bird")
       .setOrigin(0);
-    this.bird.body.gravity.y = 400;
+    this.bird.body.gravity.y = 600;
+    this.bird.setCollideWorldBounds(true);
   }
 
   createPipes() {
@@ -74,7 +75,10 @@ class PlayScene extends Phaser.Scene {
   }
 
   checkGameStatus() {
-    if (this.bird.y > this.config.height || this.bird.y < -this.bird.height) {
+    if (
+      this.bird.getBounds().bottom >= this.config.height ||
+      this.bird.y <= 0
+    ) {
       this.gameOver();
     }
   }
@@ -122,11 +126,16 @@ class PlayScene extends Phaser.Scene {
   }
 
   gameOver() {
-    // this.bird.x = this.config.startPosition.x;
-    // this.bird.y = this.config.startPosition.y;
-    // this.bird.body.velocity.y = 0;
     this.physics.pause();
     this.bird.setTint(0xff0000);
+
+    this.time.addEvent({
+      delay: 1000,
+      callback: () => {
+        this.scene.restart();
+      },
+      loop: false,
+    });
   }
 
   flap() {
